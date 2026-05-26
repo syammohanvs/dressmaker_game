@@ -3,549 +3,401 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dress-Up Adventure</title>
+<title>Dress-Up Adventure Fixed</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;color:#fff;overflow-x:hidden}
-.header{text-align:center;padding:20px 10px 10px;background:rgba(0,0,0,.3);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100}
-.header h1{font-size:28px;background:linear-gradient(135deg,#f7971e,#ffd200);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.header p{font-size:13px;color:#8899aa;margin-top:2px}
-.layout{display:flex;gap:15px;padding:15px;max-width:1300px;margin:0 auto;min-height:calc(100vh - 90px)}
-.topic-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:8px 10px;background:rgba(255,255,255,.05);margin:0 15px;border-radius:12px}
-.topic-btn{padding:6px 16px;border-radius:20px;border:2px solid transparent;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;background:rgba(255,255,255,.08);color:#aab}
-.topic-btn:hover{background:rgba(255,255,255,.15);transform:translateY(-1px)}
-.topic-btn.active{border-color:#ffd200;background:rgba(255,210,0,.15);color:#ffd200;box-shadow:0 0 20px rgba(255,210,0,.15)}
-.char-area{flex:1;display:flex;flex-direction:column;align-items:center;min-width:300px}
-.char-card{background:rgba(255,255,255,.06);border-radius:20px;padding:20px;position:relative;width:100%;max-width:380px;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 32px rgba(0,0,0,.3)}
-.char-frame{position:relative;width:220px;height:320px}
-.base-char{position:absolute;inset:0}
-.base-char .head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:80px;height:80px;background:linear-gradient(135deg,#f5d0b8,#e8b89a);border-radius:50%;z-index:1}
-.base-char .face{position:absolute;inset:0}
-.base-char .eye{position:absolute;width:8px;height:10px;background:#2d1810;border-radius:50%;top:32px}
-.base-char .eye.l{left:20px}
-.base-char .eye.r{right:20px}
-.base-char .mouth{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);width:16px;height:8px;border:2px solid #c47070;border-top:none;border-radius:0 0 12px 12px}
-.base-char .blush{position:absolute;width:14px;height:8px;background:rgba(255,150,150,.35);border-radius:50%;top:42px}
-.base-char .blush.l{left:8px}
-.base-char .blush.r{right:8px}
-.base-char .body{position:absolute;top:72px;left:50%;transform:translateX(-50%);width:70px;height:85px;background:linear-gradient(180deg,#f5d0b8,#e8b89a);border-radius:12px 12px 8px 8px;z-index:0}
-.base-char .arm{position:absolute;width:14px;height:65px;background:linear-gradient(180deg,#f0c8a8,#e0b090);border-radius:7px;top:78px}
-.base-char .arm.l{left:17px;transform:rotate(-10deg)}
-.base-char .arm.r{right:17px;transform:rotate(10deg)}
-.base-char .leg{position:absolute;width:18px;height:70px;background:linear-gradient(180deg,#e0b090,#d0a080);border-radius:9px;top:152px}
-.base-char .leg.l{left:68px}
-.base-char .leg.r{right:68px}
-.base-char .foot{position:absolute;width:22px;height:10px;background:#d0a080;border-radius:5px;top:217px}
-.base-char .foot.l{left:65px}
-.base-char .foot.r{right:65px}
-.item-layer{position:absolute;inset:0;pointer-events:none;z-index:5}
-.item-slot{position:absolute;transition:all .3s ease;opacity:0;transform:scale(.85)}
-.item-slot.equipped{opacity:1;transform:scale(1)}
-.item-slot .emoji{display:block;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
-.item-slot .label{display:none}
-.item-slot.slot-hat{top:-12px;left:50%;transform:translateX(-50%) scale(.85)}
-.item-slot.slot-hat.equipped{transform:translateX(-50%) scale(1)}
-.item-slot.slot-hat .emoji{font-size:44px}
-.item-slot.slot-eyewear{top:28px;left:50%;transform:translateX(-50%) scale(.85)}
-.item-slot.slot-eyewear.equipped{transform:translateX(-50%) scale(1)}
-.item-slot.slot-eyewear .emoji{font-size:36px}
-.item-slot.slot-top{top:54px;left:50%;transform:translateX(-50%) scale(.85);width:190px;height:110px}
-.item-slot.slot-top.equipped{transform:translateX(-50%) scale(1)}
-.item-slot.slot-top .cloth-piece{width:100%;height:100%;border-radius:18px 18px 10px 10px;display:flex;align-items:center;justify-content:center;font-size:36px;border:3px solid;transition:all .3s;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.4)}
-.item-slot.slot-top .cloth-piece::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,transparent 50%);border-radius:inherit;pointer-events:none}
-.item-slot.slot-bottom{top:148px;left:50%;transform:translateX(-50%) scale(.85);width:120px;height:80px}
-.item-slot.slot-bottom.equipped{transform:translateX(-50%) scale(1)}
-.item-slot.slot-bottom .cloth-piece{width:100%;height:100%;border-radius:8px 8px 14px 14px;display:flex;align-items:center;justify-content:center;font-size:34px;border:3px solid;transition:all .3s;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.4)}
-.item-slot.slot-bottom .cloth-piece::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.2) 0%,transparent 40%);border-radius:inherit;pointer-events:none}
-.char-frame.has-top .base-char .body,
-.char-frame.has-top .base-char .arm{display:none}
-.char-frame.has-bottom .base-char .leg{display:none}
-.item-slot.slot-shoes .emoji{font-size:32px}
-.item-slot.slot-shoes{top:208px;left:50%;transform:translateX(-50%) scale(.85)}
-.item-slot.slot-shoes.equipped{transform:translateX(-50%) scale(1)}
-.item-slot.slot-acc1{top:90px;left:-12px;transform:scale(.85)}
-.item-slot.slot-acc1.equipped{transform:scale(1)}
-.item-slot.slot-acc1 .emoji{font-size:32px}
-.item-slot.slot-acc2{top:85px;right:-14px;transform:scale(.85)}
-.item-slot.slot-acc2.equipped{transform:scale(1)}
-.item-slot.slot-acc2 .emoji{font-size:36px}
-.panel{width:290px;flex-shrink:0}
-.panel-card{background:rgba(255,255,255,.06);border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid rgba(255,255,255,.06)}
-.panel-card h3{font-size:14px;color:#aab;margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
-.cat-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
-.cat-tab{padding:4px 10px;border-radius:12px;border:none;cursor:pointer;font-size:11px;font-weight:600;transition:all .2s;background:rgba(255,255,255,.08);color:#889}
-.cat-tab:hover{background:rgba(255,255,255,.14);color:#bbc}
-.cat-tab.active{background:#ffd200;color:#1a1a2e}
-.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.item-btn{background:rgba(255,255,255,.08);border-radius:10px;padding:8px 4px;cursor:pointer;text-align:center;transition:all .2s;border:2px solid transparent;user-select:none}
-.item-btn:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
-.item-btn.equipped{border-color:#ffd200;background:rgba(255,210,0,.12);box-shadow:0 0 12px rgba(255,210,0,.1)}
-.item-btn .emoji{font-size:28px;display:block}
-.item-btn .iname{font-size:10px;color:#99a;margin-top:3px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.item-btn .color-swatch{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:middle;border:1px solid rgba(255,255,255,.2)}
-.actions{display:flex;gap:6px;flex-wrap:wrap}
-.actions button{flex:1;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;min-width:70px}
-.btn-random{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.btn-random:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(102,126,234,.4)}
-.btn-clear{background:rgba(255,255,255,.1);color:#aab}
-.btn-clear:hover{background:rgba(255,255,255,.16)}
-.btn-share{background:linear-gradient(135deg,#f7971e,#ffd200);color:#1a1a2e}
-.btn-share:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(255,210,0,.3)}
-.empty-msg{color:#667;font-size:12px;text-align:center;padding:12px 0;grid-column:1/-1}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:10px 24px;border-radius:10px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1)}
-.toast.show{opacity:1}
-@media(max-width:820px){.layout{flex-direction:column;align-items:center}.panel{width:100%;max-width:400px}.char-card{max-width:320px}}
-@media(max-width:500px){.header h1{font-size:22px}.topic-btn{font-size:11px;padding:4px 12px}.items-grid{grid-template-columns:repeat(3,1fr)}}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#1d2545;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    color:white;
+}
+
+.container{
+    display:flex;
+    gap:40px;
+    align-items:flex-start;
+}
+
+.character-card{
+    background:rgba(255,255,255,0.05);
+    padding:30px;
+    border-radius:20px;
+}
+
+.char-frame{
+    position:relative;
+    width:240px;
+    height:360px;
+}
+
+/* =========================
+   BASE CHARACTER
+========================= */
+
+.head{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:90px;
+    height:90px;
+    background:#e7c1a5;
+    border-radius:50%;
+    z-index:5;
+}
+
+.eye{
+    position:absolute;
+    width:8px;
+    height:10px;
+    background:#222;
+    border-radius:50%;
+    top:35px;
+}
+
+.eye.left{
+    left:24px;
+}
+
+.eye.right{
+    right:24px;
+}
+
+.blush{
+    position:absolute;
+    width:14px;
+    height:8px;
+    background:rgba(255,100,100,0.3);
+    border-radius:50%;
+    top:48px;
+}
+
+.blush.left{
+    left:8px;
+}
+
+.blush.right{
+    right:8px;
+}
+
+.mouth{
+    position:absolute;
+    width:18px;
+    height:8px;
+    border:2px solid #c76c6c;
+    border-top:none;
+    border-radius:0 0 12px 12px;
+    bottom:16px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+/* BODY */
+
+.body{
+    position:absolute;
+    top:80px;
+    left:50%;
+    transform:translateX(-50%);
+    width:92px;
+    height:120px;
+    background:#e7c1a5;
+    border-radius:14px;
+    z-index:2;
+}
+
+/* ARMS */
+
+.arm{
+    position:absolute;
+    width:16px;
+    height:85px;
+    background:#e7c1a5;
+    border-radius:10px;
+    top:90px;
+    z-index:1;
+}
+
+.arm.left{
+    left:54px;
+    transform:rotate(-8deg);
+}
+
+.arm.right{
+    right:54px;
+    transform:rotate(8deg);
+}
+
+/* LEGS */
+
+.leg{
+    position:absolute;
+    width:20px;
+    height:80px;
+    background:#d9ae8c;
+    border-radius:10px;
+    top:190px;
+}
+
+.leg.left{
+    left:88px;
+}
+
+.leg.right{
+    right:88px;
+}
+
+/* FEET */
+
+.foot{
+    position:absolute;
+    width:24px;
+    height:12px;
+    background:#d9ae8c;
+    border-radius:6px;
+    top:265px;
+}
+
+.foot.left{
+    left:86px;
+}
+
+.foot.right{
+    right:86px;
+}
+
+/* =========================
+   ITEM SLOTS
+========================= */
+
+.item{
+    position:absolute;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* HAT */
+
+.slot-hat{
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:42px;
+    z-index:20;
+}
+
+/* EYEWEAR */
+
+.slot-eyewear{
+    top:28px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:32px;
+    z-index:15;
+}
+
+/* TOP */
+
+.slot-top{
+    top:78px;
+    left:50%;
+    transform:translateX(-50%);
+    width:96px;
+    height:100px;
+    border-radius:16px;
+    z-index:10;
+}
+
+/* BOTTOM */
+
+.slot-bottom{
+    top:170px;
+    left:50%;
+    transform:translateX(-50%);
+    width:76px;
+    height:76px;
+    border-radius:12px;
+    z-index:10;
+}
+
+/* SHOES */
+
+.slot-shoes{
+    top:255px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:30px;
+    z-index:15;
+}
+
+/* ACCESSORIES */
+
+.slot-acc1{
+    top:120px;
+    left:25px;
+    font-size:32px;
+    z-index:20;
+}
+
+.slot-acc2{
+    top:120px;
+    right:25px;
+    font-size:32px;
+    z-index:20;
+}
+
+/* CLOTHES */
+
+.cloth{
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:inherit;
+    border:3px solid rgba(255,255,255,0.3);
+    font-size:34px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+/* =========================
+   CONTROL PANEL
+========================= */
+
+.panel{
+    width:320px;
+}
+
+.panel h2{
+    margin-bottom:20px;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.btn{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="header">
-    <h1>👗 Dress-Up Adventure</h1>
-    <p>Mix & match looks across different themes</p>
-</div>
+<div class="container">
 
-<div class="topic-bar" id="topicBar"></div>
+    <div class="character-card">
 
-<div class="layout">
-    <div class="char-area">
-        <div class="char-card">
-            <div class="char-frame" id="charFrame">
-                <div class="base-char">
-                    <div class="head">
-                        <div class="face">
-                            <div class="eye l"></div>
-                            <div class="eye r"></div>
-                            <div class="mouth"></div>
-                            <div class="blush l"></div>
-                            <div class="blush r"></div>
-                        </div>
-                    </div>
-                    <div class="arm l"></div>
-                    <div class="arm r"></div>
-                    <div class="body"></div>
-                    <div class="leg l"></div>
-                    <div class="leg r"></div>
-                    <div class="foot l"></div>
-                    <div class="foot r"></div>
-                </div>
-                <div class="item-layer" id="itemLayer"></div>
+        <div class="char-frame">
+
+            <!-- CHARACTER -->
+
+            <div class="head">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+
+                <div class="mouth"></div>
             </div>
+
+            <div class="body"></div>
+
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+
+            <!-- ITEMS -->
+
+            <div class="item slot-hat">
+                👑
+            </div>
+
+            <div class="item slot-eyewear">
+                🔮
+            </div>
+
+            <div class="item slot-top">
+                <div class="cloth"
+                     style="background:linear-gradient(135deg,#7b2ff7,#3f0071)">
+                    🧥
+                </div>
+            </div>
+
+            <div class="item slot-bottom">
+                <div class="cloth"
+                     style="background:linear-gradient(135deg,#4facfe,#0061ff)">
+                    👖
+                </div>
+            </div>
+
+            <div class="item slot-shoes">
+                👟
+            </div>
+
+            <div class="item slot-acc1">
+                ⚔️
+            </div>
+
+            <div class="item slot-acc2">
+                🛡️
+            </div>
+
         </div>
+
     </div>
+
+    <!-- CONTROL PANEL -->
 
     <div class="panel">
-        <div class="panel-card actions">
-            <button class="btn-random" onclick="randomOutfit()">🎲 Random</button>
-            <button class="btn-clear" onclick="clearAll()">🗑️ Clear</button>
-            <button class="btn-share" onclick="shareOutfit()">📋 Copy</button>
+
+        <h2>Dress-Up Adventure</h2>
+
+        <div class="buttons">
+
+            <button class="btn">Fantasy</button>
+            <button class="btn">Beach</button>
+
+            <button class="btn">Professional</button>
+            <button class="btn">Space</button>
+
+            <button class="btn">Party</button>
+            <button class="btn">Sporty</button>
+
         </div>
-        <div class="panel-card">
-            <h3 id="catTitle">🧢 Headwear</h3>
-            <div class="cat-tabs" id="catTabs"></div>
-            <div class="items-grid" id="itemsGrid"></div>
-        </div>
+
     </div>
+
 </div>
 
-<div class="toast" id="toast"></div>
-
-<script>
-const SLOTS=['hat','eyewear','top','bottom','shoes','acc1','acc2'];
-const TOPICS=[
-    {id:'fantasy',label:'Fantasy',icon:'🌟'},
-    {id:'beach',label:'Beach',icon:'🏖️'},
-    {id:'professional',label:'Professional',icon:'💼'},
-    {id:'space',label:'Space',icon:'🚀'},
-    {id:'medieval',label:'Medieval',icon:'🏰'},
-    {id:'party',label:'Party',icon:'🎉'},
-    {id:'gothic',label:'Gothic',icon:'🖤'},
-    {id:'sporty',label:'Sporty',icon:'⚽'},
-];
-const ITEMS={
-    fantasy:{
-        hat:[
-            {e:'🪄',n:'Wizard Hat'},{e:'👑',n:'Golden Crown'},{e:'🌸',n:'Flower Crown'},{e:'🎀',n:'Enchanted Hair Bow'},{e:'🌙',n:'Crescent Tiara'},{e:'🍄',n:'Mushroom Cap'}
-        ],
-        eyewear:[
-            {e:'🔮',n:'Mystic Spectacles'},{e:'✨',n:'Fairy Sight'},{e:'👁️',n:'All-Seeing Eye'},{e:'💎',n:'Gem Monocle'}
-        ],
-        top:[
-            {e:'🧙',n:'Magic Robe',c:['#6a0dad','#4a0080'],b:'#9b30ff'},{e:'🦸',n:'Elven Tunic',c:['#2d8a4e','#1a6b34'],b:'#3cb371'},
-            {e:'🐉',n:'Dragon Scale Armor',c:['#8b0000','#5c0000'],b:'#ff4444'},{e:'🌙',n:'Moon Cloak',c:['#1a1a4e','#0d0d2e'],b:'#4a4aff'},
-            {e:'🧚',n:'Fairy Bodice',c:['#ff69b4','#c2185b'],b:'#ffb6c1'},{e:'🌿',n:'Druid Robe',c:['#556b2f','#2e4a1a'],b:'#8fbc8f'},
-            {e:'🔥',n:'Phoenix Vest',c:['#ff4500','#b22222'],b:'#ff8c00'},{e:'❄️',n:'Ice Queen Gown',c:['#b0e0e6','#4682b4'],b:'#e0ffff'}
-        ],
-        bottom:[
-            {e:'👖',n:'Mystic Pants',c:['#4a0080','#2a0048'],b:'#9b30ff'},{e:'🎌',n:'Fairy Skirt',c:['#ff69b4','#d6408a'],b:'#ffb6c1'},
-            {e:'👗',n:'Wizard Bottom',c:['#483d8b','#2a1a5e'],b:'#7b68ee'},{e:'🌊',n:'Naiad Wrap',c:['#008b8b','#005050'],b:'#20b2aa'}
-        ],
-        shoes:[
-            {e:'👢',n:'Enchanted Boots'},{e:'🩰',n:'Glass Slippers'},{e:'👞',n:'Elven Shoes'},{e:'🥿',n:'Moss Walkers'}
-        ],
-        acc1:[
-            {e:'⚡',n:'Magic Wand'},{e:'📖',n:'Spellbook'},{e:'🧪',n:'Potion'},{e:'🏹',n:'Elven Bow'},{e:'🐚',n:'Conch Horn'}
-        ],
-        acc2:[
-            {e:'🦋',n:'Fairy Wings'},{e:'🛡️',n:'Magic Shield'},{e:'🎒',n:'Adventurer Pack'},{e:'🧣',n:'Invisibility Cloak'},{e:'🏮',n:'Lantern'}
-        ]
-    },
-    beach:{
-        hat:[
-            {e:'👒',n:'Sun Hat'},{e:'🧢',n:'Visor'},{e:'🌺',n:'Flower Lei'},{e:'🧉',n:'Straw Hat'},{e:'⛱️',n:'Beach Umbrella Hat'},{e:'🎀',n:'Hibiscus Clip'}
-        ],
-        eyewear:[
-            {e:'😎',n:'Sunglasses'},{e:'🏊',n:'Swim Goggles'},{e:'🕶️',n:'Aviators'},{e:'👓',n:'Blue Blockers'}
-        ],
-        top:[
-            {e:'👙',n:'Bikini Top',c:['#ff6b9d','#e8416a'],b:'#ff69b4'},{e:'👕',n:'Hawaiian Shirt',c:['#ff4500','#ff8c00'],b:'#ffd700'},
-            {e:'🏄',n:'Rash Guard',c:['#00bfff','#0099cc'],b:'#00ffff'},{e:'🩱',n:'Shell Bikini',c:['#ffefd5','#deb887'],b:'#f5deb3'},
-            {e:'☀️',n:'Sunny Tank',c:['#ffff00','#ffa500'],b:'#fffacd'},{e:'🌊',n:'Wave Tee',c:['#20b2aa','#008080'],b:'#7fffd4'},
-            {e:'🐠',n:'Coral Top',c:['#ff7f50','#ff6347'],b:'#ffa07a'},{e:'🏖️',n:'Sandy Tube Top',c:['#f4a460','#d2691e'],b:'#f5deb3'}
-        ],
-        bottom:[
-            {e:'🩳',n:'Swim Trunks',c:['#00bfff','#006994'],b:'#00ffff'},{e:'👗',n:'Sarong',c:['#ff69b4','#d6408a'],b:'#ffb6c1'},
-            {e:'🩱',n:'Boardshorts',c:['#ffa500','#cc8400'],b:'#ffd700'},{e:'👖',n:'Cargo Shorts',c:['#deb887','#b8860b'],b:'#f5deb3'},
-            {e:'🎽',n:'Tie-Dye Bottoms',c:['#ff1493','#9400d3'],b:'#ff69b4'},{e:'🧵',n:'Crochet Skirt',c:['#fff8dc','#fafad2'],b:'#fffff0'}
-        ],
-        shoes:[
-            {e:'🩴',n:'Flip Flops'},{e:'👟',n:'Water Shoes'},{e:'🦶',n:'Barefoot'},{e:'👡',n:'Sandals'},{e:'🥿',n:'Espadrilles'}
-        ],
-        acc1:[
-            {e:'🧴',n:'Sunscreen'},{e:'🏐',n:'Beach Ball'},{e:'🎸',n:'Ukulele'},{e:'🍹',n:'Coconut Drink'},{e:'🐚',n:'Seashell'}
-        ],
-        acc2:[
-            {e:'🧺',n:'Beach Bag'},{e:'🏖️',n:'Beach Towel'},{e:'🪁',n:'Kite'},{e:'🏄',n:'Surfboard'},{e:'🤿',n:'Snorkel'}
-        ]
-    },
-    professional:{
-        hat:[
-            {e:'🎩',n:'Fedora'},{e:'🧢',n:'Beret'},{e:'⛑️',n:'Hard Hat'},{e:'🎓',n:'Graduate Cap'},{e:'🧠',n:'Thinking Cap'},{e:'👩‍💼',n:'Hair Bun'}
-        ],
-        eyewear:[
-            {e:'👓',n:'Reading Glasses'},{e:'🕶️',n:'Aviators'},{e:'🔬',n:'Safety Goggles'},{e:'👁️',n:'Contact Lenses'}
-        ],
-        top:[
-            {e:'👔',n:'Business Suit',c:['#2c3e50','#1a252f'],b:'#5d6d7e'},{e:'👕',n:'Dress Shirt',c:['#ffffff','#f0f0f0'],b:'#cccccc'},
-            {e:'🥼',n:'Lab Coat',c:['#f5f5f5','#e0e0e0'],b:'#ffffff'},{e:'🧥',n:'Blazer',c:['#1a1a2e','#0d0d1a'],b:'#4a4a6a'},
-            {e:'👚',n:'Blouse',c:['#ffb6c1','#ff91a4'],b:'#ffc0cb'},{e:'👗',n:'Sheath Dress',c:['#800020','#4d0013'],b:'#b22222'},
-            {e:'🧶',n:'Cardigan',c:['#d3d3d3','#a9a9a9'],b:'#808080'},{e:'👔',n:'Pinstripe Vest',c:['#d3d3d3','#a9a9a9'],b:'#2c3e50'}
-        ],
-        bottom:[
-            {e:'👖',n:'Dress Pants',c:['#2c3e50','#1a252f'],b:'#5d6d7e'},{e:'👗',n:'Pencil Skirt',c:['#4a4a4a','#2d2d2d'],b:'#666666'},
-            {e:'🩳',n:'Chinos',c:['#c3a87c','#a08050'],b:'#deb887'},{e:'👖',n:'Tailored Trousers',c:['#1a1a2e','#0d0d1a'],b:'#4a4a6a'}
-        ],
-        shoes:[
-            {e:'👞',n:'Oxfords'},{e:'👠',n:'Heels'},{e:'👢',n:'Boots'},{e:'👟',n:'Loafers'},{e:'🥿',n:'Flats'}
-        ],
-        acc1:[
-            {e:'💼',n:'Briefcase'},{e:'📋',n:'Clipboard'},{e:'💻',n:'Laptop'},{e:'📱',n:'Smartphone'},{e:'☕',n:'Coffee'}
-        ],
-        acc2:[
-            {e:'🧳',n:'Leather Bag'},{e:'☂️',n:'Umbrella'},{e:'⌚',n:'Watch'},{e:'🎀',n:'Tie'},{e:'🧣',n:'Scarf'}
-        ]
-    },
-    space:{
-        hat:[
-            {e:'🪐',n:'Astronaut Helmet'},{e:'📡',n:'Antenna'},{e:'⭐',n:'Star Headband'},{e:'🌙',n:'Moon Crown'},{e:'💫',n:'Galaxy Halo'},{e:'🛸',n:'Saucer Hat'}
-        ],
-        eyewear:[
-            {e:'🔭',n:'Space Visor'},{e:'👾',n:'Alien Goggles'},{e:'🌌',n:'Nebula Lens'},{e:'🪐',n:'Ring Sight'}
-        ],
-        top:[
-            {e:'👨‍🚀',n:'Space Suit',c:['#ffffff','#e0e0e0'],b:'#ff4444'},{e:'🌌',n:'Star Uniform',c:['#191970','#0d0d4e'],b:'#4169e1'},
-            {e:'🛸',n:'Nebula Jacket',c:['#8b008b','#4a0080'],b:'#da70d6'},{e:'☄️',n:'Comet Vest',c:['#ff4500','#b22222'],b:'#ffd700'},
-            {e:'🌠',n:'Shooting Star Top',c:['#ffd700','#b8860b'],b:'#fffacd'},{e:'🪐',n:'Saturn Gown',c:['#f0e68c','#bdb76b'],b:'#eee8aa'}
-        ],
-        bottom:[
-            {e:'👖',n:'Space Pants',c:['#ffffff','#d3d3d3'],b:'#a9a9a9'},{e:'🚀',n:'Rocket Leggings',c:['#ff4500','#b22222'],b:'#ff8c00'},
-            {e:'👗',n:'Cosmic Skirt',c:['#483d8b','#2a1a5e'],b:'#7b68ee'},{e:'🌓',n:'Lunar Bloomers',c:['#c0c0c0','#808080'],b:'#dcdcdc'}
-        ],
-        shoes:[
-            {e:'👢',n:'Moon Boots'},{e:'👟',n:'Gravity Sneakers'},{e:'🥾',n:'Magnetic Boots'},{e:'🦿',n:'Rocket Skates'},{e:'👞',n:'Zero-G Shoes'}
-        ],
-        acc1:[
-            {e:'⚡',n:'Laser Gun'},{e:'🔬',n:'Scanner'},{e:'🛸',n:'UFO Remote'},{e:'🪐',n:'Orb Controller'},{e:'💎',n:'Space Crystal'}
-        ],
-        acc2:[
-            {e:'💨',n:'Jetpack'},{e:'🪐',n:'Planet Pendant'},{e:'🛰️',n:'Satellite'},{e:'🌌',n:'Nebula Cape'},{e:'🛸',n:'Mini UFO'}
-        ]
-    },
-    medieval:{
-        hat:[
-            {e:'⛑️',n:'Knight Helm'},{e:'👑',n:'King Crown'},{e:'🎭',n:'Masquerade Mask'},{e:'🧢',n:'Coif'},{e:'🌹',n:'Rose Crown'},{e:'🔔',n:'Jester Hat'}
-        ],
-        eyewear:[
-            {e:'🔍',n:'Monocle'},{e:'⚜️',n:'Royal Crest'},{e:'👁️',n:'Falcon Sight'},{e:'🕯️',n:'Candlelight'}
-        ],
-        top:[
-            {e:'🛡️',n:'Chainmail',c:['#808080','#505050'],b:'#a9a9a9'},{e:'🧥',n:'Royal Tunic',c:['#800020','#4d0013'],b:'#ff0000'},
-            {e:'🥋',n:'Gambeson',c:['#8b4513','#5c2e0a'],b:'#a0522d'},{e:'🧶',n:'Cloak',c:['#2f4f4f','#1a3333'],b:'#4a6a6a'},
-            {e:'⚔️',n:'Plate Armor',c:['#c0c0c0','#808080'],b:'#ffd700'},{e:'👘',n:'Noble Doublet',c:['#191970','#0d0d4e'],b:'#4169e1'},
-            {e:'🧵',n:'Peasant Tunic',c:['#d2b48c','#a08050'],b:'#deb887'},{e:'🐺',n:'Fur Mantle',c:['#8b4513','#5c2e0a'],b:'#d2691e'}
-        ],
-        bottom:[
-            {e:'👖',n:'Leather Pants',c:['#8b4513','#5c2e0a'],b:'#a0522d'},{e:'🎌',n:'Tabard',c:['#800020','#4d0013'],b:'#ffd700'},
-            {e:'👗',n:'Long Skirt',c:['#2e4a1a','#1a3310'],b:'#556b2f'},{e:'👖',n:'Chain Chaps',c:['#708090','#505050'],b:'#a9a9a9'}
-        ],
-        shoes:[
-            {e:'👢',n:'Knight Boots'},{e:'🩰',n:'Dancing Slippers'},{e:'🥾',n:'Leather Boots'},{e:'👞',n:'Pilgrim Shoes'},{e:'🦶',n:'Bare Feet'}
-        ],
-        acc1:[
-            {e:'⚔️',n:'Broadsword'},{e:'🏹',n:'Longbow'},{e:'🪓',n:'Battle Axe'},{e:'🛡️',n:'Shield'},{e:'🏳️',n:'Banner'}
-        ],
-        acc2:[
-            {e:'🛡️',n:'Heraldic Shield'},{e:'🎒',n:'Satchel'},{e:'🏴',n:'Banner'},{e:'🐎',n:'Steed'},{e:'🏺',n:'Goblet'},{e:'🔥',n:'Torch'}
-        ]
-    },
-    party:{
-        hat:[
-            {e:'🎉',n:'Party Hat'},{e:'🎊',n:'Confetti Crown'},{e:'🪅',n:'Sombrero'},{e:'🎈',n:'Balloon Hat'},{e:'👑',n:'Birthday Crown'},{e:'⭐',n:'Star Headpiece'}
-        ],
-        eyewear:[
-            {e:'🥳',n:'Fun Glasses'},{e:'🎭',n:'Masquerade Mask'},{e:'👓',n:'Neon Specs'},{e:'💡',n:'Glow Eyes'}
-        ],
-        top:[
-            {e:'✨',n:'Sequined Top',c:['#ffd700','#b8860b'],b:'#fffacd'},{e:'🕺',n:'Disco Shirt',c:['#ff00ff','#8b008b'],b:'#ff69b4'},
-            {e:'🎪',n:'Carnival Costume',c:['#ff4500','#0066ff'],b:'#ffd700'},{e:'💃',n:'Fiesta Dress',c:['#ff1493','#9400d3'],b:'#ff69b4'},
-            {e:'🌟',n:'Glitter Top',c:['#c0c0c0','#808080'],b:'#ffffff'},{e:'🌈',n:'Rainbow Tee',c:['#ff0000','#8b00ff'],b:'#ffffff'},
-            {e:'🎤',n:'Karaoke Vest',c:['#000000','#1a1a1a'],b:'#ffd700'},{e:'🎨',n:'Paint Splatter',c:['#ffffff','#f0f0f0'],b:'#ff1493'}
-        ],
-        bottom:[
-            {e:'🩰',n:'Tutu',c:['#ff69b4','#d6408a'],b:'#ffb6c1'},{e:'👖',n:'Glitter Pants',c:['#c0c0c0','#808080'],b:'#ffffff'},
-            {e:'👗',n:'Party Dress',c:['#ff1493','#8b008b'],b:'#ff69b4'},{e:'🩳',n:'Sequin Shorts',c:['#ffd700','#b8860b'],b:'#fffacd'},
-            {e:'👖',n:'Neon Leggings',c:['#00ff00','#008000'],b:'#7fff00'},{e:'🎭',n:'Harlequin Pants',c:['#ff0000','#0000ff'],b:'#ffd700'}
-        ],
-        shoes:[
-            {e:'🪩',n:'Dancing Shoes'},{e:'👢',n:'Platform Boots'},{e:'👠',n:'Stilettos'},{e:'👟',n:'Glow Sneakers'},{e:'🥿',n:'Sparkle Flats'}
-        ],
-        acc1:[
-            {e:'🎈',n:'Balloon'},{e:'🎤',n:'Microphone'},{e:'🪄',n:'Confetti Wand'},{e:'🥂',n:'Champagne'},{e:'🎊',n:'Noisemaker'}
-        ],
-        acc2:[
-            {e:'🎶',n:'Boombox'},{e:'🎨',n:'Face Paint'},{e:'🪅',n:'Party Horn'},{e:'🎁',n:'Gift Box'},{e:'🎆',n:'Sparkler'}
-        ]
-    },
-    gothic:{
-        hat:[
-            {e:'🖤',n:'Wide Brim Hat'},{e:'🌹',n:'Rose Crown'},{e:'🕷️',n:'Spider Veil'},{e:'🦇',n:'Bat Headband'},{e:'💀',n:'Skull Cap'},{e:'🔮',n:'Crystal Crown'}
-        ],
-        eyewear:[
-            {e:'🖤',n:'Dark Sunglasses'},{e:'🔮',n:'Crimson Gaze'},{e:'💜',n:'Purple Lens'},{e:'🕯️',n:'Candle Eyes'}
-        ],
-        top:[
-            {e:'🖤',n:'Velvet Corset',c:['#1a0000','#0d0000'],b:'#8b0000'},{e:'🥀',n:'Withered Bodice',c:['#4a0030','#2a0018'],b:'#800040'},
-            {e:'🦇',n:'Batwing Sleeves',c:['#1a001a','#0d000d'],b:'#4a004a'},{e:'🌙',n:'Midnight Gown',c:['#000033','#00001a'],b:'#000066'},
-            {e:'🕸️',n:'Web Shawl',c:['#2a2a2a','#1a1a1a'],b:'#4a4a4a'},{e:'💜',n:'Purple Corset',c:['#4a0080','#2a0048'],b:'#9b30ff'},
-            {e:'🖤',n:'Victorian Blouse',c:['#ffffff','#e0e0e0'],b:'#000000'},{e:'🌑',n:'Shadow Robe',c:['#0a0a0a','#000000'],b:'#333333'}
-        ],
-        bottom:[
-            {e:'👗',n:'Gothic Skirt',c:['#1a0000','#0d0000'],b:'#8b0000'},{e:'👖',n:'Vinyl Pants',c:['#0a0a0a','#000000'],b:'#333333'},
-            {e:'👗',n:'Lace Petticoat',c:['#2a2a2a','#1a1a1a'],b:'#4a4a4a'},{e:'👖',n:'Fishnets',c:['#1a0000','#0d0000'],b:'#8b0000'},
-            {e:'👗',n:'Crinoline Dress',c:['#800080','#4a004a'],b:'#da70d6'}
-        ],
-        shoes:[
-            {e:'👢',n:'Platform Boots'},{e:'👠',n:'Stiletto Heels'},{e:'🥿',n:'Victorian Boots'},{e:'👞',n:'Gothic Loafers'},{e:'🦇',n:'Bat Buckle Shoes'}
-        ],
-        acc1:[
-            {e:'🌹',n:'Black Rose'},{e:'🕯️',n:'Candelabra'},{e:'📖',n:'Old Tome'},{e:'🔮',n:'Crystal Ball'},{e:'🪞',n:'Hand Mirror'}
-        ],
-        acc2:[
-            {e:'🦇',n:'Bat Wings'},{e:'🌙',n:'Moon Pendant'},{e:'🧣',n:'Lace Shawl'},{e:'💀',n:'Skull Charm'},{e:'🕷️',n:'Spider Brooch'}
-        ]
-    },
-    sporty:{
-        hat:[
-            {e:'🧢',n:'Baseball Cap'},{e:'⛑️',n:'Football Helmet'},{e:'🎾',n:'Visor'},{e:'🎿',n:'Beanie'},{e:'🏃',n:'Headband'},{e:'🏀',n:'Basketball Headband'}
-        ],
-        eyewear:[
-            {e:'🏊',n:'Swim Goggles'},{e:'🥽',n:'Protective Goggles'},{e:'😎',n:'Sport Sunglasses'},{e:'👓',n:'Rec Specs'}
-        ],
-        top:[
-            {e:'👕',n:'Jersey',c:['#ff0000','#cc0000'],b:'#ffffff'},{e:'🎽',n:'Tank Top',c:['#00bfff','#0099cc'],b:'#ffffff'},
-            {e:'🏋️',n:'Compression Shirt',c:['#000000','#1a1a1a'],b:'#ff0000'},{e:'🧥',n:'Track Jacket',c:['#c0c0c0','#808080'],b:'#ff0000'},
-            {e:'👕',n:'Retro Jersey',c:['#00ff00','#009900'],b:'#ffffff'},{e:'🎿',n:'Snow Jacket',c:['#ff4500','#b22222'],b:'#ffff00'},
-            {e:'🏐',n:'Volleyball Tee',c:['#ffff00','#ffa500'],b:'#ffffff'},{e:'🥊',n:'Boxing Tank',c:['#ff0000','#8b0000'],b:'#ffffff'}
-        ],
-        bottom:[
-            {e:'🩳',n:'Shorts',c:['#000000','#1a1a1a'],b:'#ffffff'},{e:'👖',n:'Sweatpants',c:['#808080','#505050'],b:'#a9a9a9'},
-            {e:'🩳',n:'Compression Shorts',c:['#0000ff','#0000cc'],b:'#ffffff'},{e:'👖',n:'Track Pants',c:['#c0c0c0','#808080'],b:'#ff0000'},
-            {e:'🩳',n:'Running Shorts',c:['#00bfff','#0099cc'],b:'#ffffff'},{e:'👖',n:'Warm-up Pants',c:['#ff4500','#b22222'],b:'#ffffff'}
-        ],
-        shoes:[
-            {e:'👟',n:'Running Shoes'},{e:'🥾',n:'Hiking Boots'},{e:'⛸️',n:'Ice Skates'},{e:'🎿',n:'Snowboard Boots'},{e:'👟',n:'Basketball High-Tops'},{e:'👟',n:'Cleats'}
-        ],
-        acc1:[
-            {e:'🏀',n:'Basketball'},{e:'⚽',n:'Soccer Ball'},{e:'🎾',n:'Tennis Racket'},{e:'🏓',n:'Paddle'},{e:'🥊',n:'Boxing Glove'}
-        ],
-        acc2:[
-            {e:'🧴',n:'Sports Bag'},{e:'⌚',n:'Fitness Watch'},{e:'💧',n:'Water Bottle'},{e:'🧢',n:'Towel'},{e:'🎧',n:'Headphones'},{e:'🏅',n:'Medal'}
-        ]
-    }
-};
-const CAT_NAMES={hat:'🧢 Headwear',eyewear:'👓 Eyewear',top:'👕 Tops',bottom:'👖 Bottoms',shoes:'👟 Shoes',acc1:'✋ Hold Item',acc2:'🎒 Back Item'};
-const CAT_ORDER=['hat','eyewear','top','bottom','shoes','acc1','acc2'];
-
-let currentTopic='fantasy';
-let currentCat='hat';
-let outfit={};
-
-function showToast(msg){
-    const t=document.getElementById('toast');
-    t.textContent=msg;
-    t.classList.add('show');
-    clearTimeout(t._hide);
-    t._hide=setTimeout(()=>t.classList.remove('show'),2000);
-}
-
-function renderTopics(){
-    const bar=document.getElementById('topicBar');
-    bar.innerHTML=TOPICS.map(t=>
-        `<button class="topic-btn${t.id===currentTopic?' active':''}" onclick="selectTopic('${t.id}')">${t.icon} ${t.label}</button>`
-    ).join('');
-}
-
-function selectTopic(id){
-    currentTopic=id;
-    renderTopics();
-    outfit={};
-    renderCats();
-    renderItems();
-    renderChar();
-    showToast(`Switched to ${TOPICS.find(t=>t.id===id).label}`);
-}
-
-function renderCats(){
-    const tabs=document.getElementById('catTabs');
-    const items=ITEMS[currentTopic];
-    tabs.innerHTML=CAT_ORDER.filter(c=>items[c]).map(c=>
-        `<button class="cat-tab${c===currentCat?' active':''}" onclick="selectCat('${c}')">${CAT_NAMES[c]||c}</button>`
-    ).join('');
-    document.getElementById('catTitle').textContent=CAT_NAMES[currentCat]||currentCat;
-}
-
-function selectCat(cat){
-    currentCat=cat;
-    renderCats();
-    renderItems();
-}
-
-function renderItems(){
-    const grid=document.getElementById('itemsGrid');
-    const items=ITEMS[currentTopic][currentCat];
-    if(!items||!items.length){
-        grid.innerHTML='<div class="empty-msg">No items here yet</div>';
-        return;
-    }
-    const isCloth=currentCat==='top'||currentCat==='bottom';
-    grid.innerHTML=items.map((item,i)=>{
-        const key=`${currentCat}-${i}`;
-        const eq=outfit[currentCat]===key;
-        let extra='';
-        if(isCloth&&item.c){
-            extra=` <span class="color-swatch" style="background:${item.c[0]}"></span>`;
-        }
-        return `<div class="item-btn${eq?' equipped':''}" onclick="toggleItem('${currentCat}',${i})">
-            <span class="emoji">${item.e}</span>
-            <span class="iname">${extra}${item.n}</span>
-        </div>`;
-    }).join('');
-}
-
-function toggleItem(cat,idx){
-    const key=`${cat}-${idx}`;
-    if(outfit[cat]===key){
-        delete outfit[cat];
-    } else {
-        outfit[cat]=key;
-    }
-    renderItems();
-    renderChar();
-}
-
-function renderChar(){
-    const layer=document.getElementById('itemLayer');
-    const frame=document.getElementById('charFrame');
-    const items=ITEMS[currentTopic];
-    let html='';
-    let hasTop=false,hasBottom=false;
-    for(const slot of SLOTS){
-        const key=outfit[slot];
-        let emoji='',name='',style='';
-        let isCloth=false;
-        if(key){
-            const [cat,idx]=key.split('-');
-            const item=items[cat]?.[parseInt(idx)];
-            if(item){
-                emoji=item.e;
-                name=item.n;
-                if((cat==='top'||cat==='bottom')&&item.c){
-                    isCloth=true;
-                    if(cat==='top') hasTop=true;
-                    if(cat==='bottom') hasBottom=true;
-                    const grad=item.c.join(',');
-                    style=`background:linear-gradient(135deg,${item.c[0]},${item.c[1]});border-color:${item.b||item.c[0]}`;
-                }
-            }
-        }
-        if(isCloth){
-            html+=`<div class="item-slot slot-${slot}${key?' equipped':''}">
-                <div class="cloth-piece" style="${style}"><span class="emoji" style="font-size:36px">${emoji||''}</span></div>
-            </div>`;
-        } else {
-            html+=`<div class="item-slot slot-${slot}${key?' equipped':''}">
-                <span class="emoji">${emoji||''}</span>
-                <span class="label">${name||''}</span>
-            </div>`;
-        }
-    }
-    frame.classList.toggle('has-top',hasTop);
-    frame.classList.toggle('has-bottom',hasBottom);
-    layer.innerHTML=html;
-}
-
-function randomOutfit(){
-    const items=ITEMS[currentTopic];
-    for(const slot of SLOTS){
-        if(items[slot]&&items[slot].length){
-            const idx=Math.floor(Math.random()*items[slot].length);
-            outfit[slot]=`${slot}-${idx}`;
-        }
-    }
-    renderItems();
-    renderChar();
-    showToast('🎲 Random outfit generated!');
-}
-
-function clearAll(){
-    outfit={};
-    renderItems();
-    renderChar();
-    showToast('🗑️ Cleared all items');
-}
-
-function shareOutfit(){
-    const items=ITEMS[currentTopic];
-    const theme=TOPICS.find(t=>t.id===currentTopic);
-    let parts=[`✨ *Dress-Up Adventure - ${theme.label}* ✨`];
-    let hasItems=false;
-    for(const slot of SLOTS){
-        const key=outfit[slot];
-        if(key){
-            const [cat,idx]=key.split('-');
-            const item=items[cat]?.[parseInt(idx)];
-            if(item){parts.push(`${item.e} ${item.n}`);hasItems=true;}
-        }
-    }
-    if(!hasItems) parts.push('_(no items equipped yet!)_');
-    const text=parts.join('\n');
-    navigator.clipboard.writeText(text).then(()=>showToast('📋 Copied outfit to clipboard!')).catch(()=>showToast('📋 Select & copy the outfit text'));
-}
-
-renderTopics();
-renderCats();
-renderItems();
-renderChar();
-</script>
 </body>
 </html>
